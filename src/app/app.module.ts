@@ -1,16 +1,50 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// tslint:disable-next-line:max-line-length
+import { MatCardModule, MatIconModule, MatToolbarModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatSelectModule } from '@angular/material';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import { HeaderComponent } from './header/header.component';
+import { GamesComponent } from './games/games.component';
+import { GamesListComponent } from './games/games-list/games-list.component';
+import { GamesCreateComponent } from './games/games-create/games-create.component';
+import {HttpClientModule} from '@angular/common/http';
+import { StoresComponent } from './stores/stores.component';
+import { StoresListComponent } from './stores/stores-list/stores-list.component';
+import { StoresDetailsComponent } from './stores/stores-details/stores-details.component';
+import { StoresCreateComponent } from './stores/stores-create/stores-create.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    GamesComponent,
+    GamesListComponent,
+    GamesCreateComponent,
+    StoresComponent,
+    StoresListComponent,
+    StoresDetailsComponent,
+    StoresCreateComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

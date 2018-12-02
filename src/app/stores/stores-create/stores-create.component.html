@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form (submit)="onSaveStore(postForm)" #postForm="ngForm" *ngIf="!isLoading">
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        name="title"
+        [ngModel]="store?.title"
+        required
+        minlength="3"
+        placeholder="Store Title"
+        #title="ngModel">
+      <mat-error *ngIf="title.invalid">Please enter a Store title.</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea
+        matInput
+        rows="4"
+        name="address"
+        [ngModel]="store?.address"
+        required
+        placeholder="Store address"
+        #address="ngModel"></textarea>
+      <mat-error *ngIf="address.invalid">Please enter the address.</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Games" multiple [(ngModel)]="selectedValue" name="games" required>
+      <mat-option *ngFor="let game of games" [value]="game?.id">{{game.title}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p> {{selectedValue}} </p>
+    <button
+      mat-raised-button
+      color="accent"
+      type="submit">Save Store</button>
+  </form>
+</mat-card>
+

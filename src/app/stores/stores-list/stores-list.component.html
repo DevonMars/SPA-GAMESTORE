@@ -1,0 +1,26 @@
+<br>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<div class="container">
+  <div class="col-md-4">
+      <button mat-flat-button color="primary" (click)="onAddStore()">Add Store</button>
+      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center">
+          <mat-card class="card-picture" multi="true" *ngFor="let store of stores" >
+              <a style="cursor: pointer;" [routerLink]="store.id" routerLinkActive="active">
+            <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+              <span fxFlex="100%">{{store.title}}</span>
+            </mat-card-title></a>
+            <!-- <mat-card-content>
+              <p>{{game.discription}}</p>
+            </mat-card-content> -->
+            <mat-card-actions class="action">
+                <button mat-button color="primary" fxFlex="50%" [routerLink]="[store.id,'edit']">EDIT</button>
+                <!-- <button mat-button color="primary" fxFlex="50%" [routerLink]="['/edit', game.id]">EDIT</button> -->
+                <button mat-button color="warn" fxFlex="50%" (click)="onDelete(store.id)">DELETE</button>
+              </mat-card-actions>
+            <!-- <img mat-card-image [src]="picture.img"> -->
+          </mat-card>
+        </div>
+  </div>
+</div>
+
+
