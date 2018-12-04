@@ -41,7 +41,7 @@ export class StoresService {
   }
 
   getStore(id: string) {
-    return this.http.get<{  _id: string; title: string; address: string; games: Game[] }>(
+    return this.http.get<{_id: string; title: string; address: string; games: Game[] }>(
       'http://localhost:3000/api/stores/' + id
     );
   }

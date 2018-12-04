@@ -18,7 +18,9 @@ router.get('', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-  Store.findById(req.params.id).then(store => {
+  const storeId = req.params.id;
+  Store.findById({_id: storeId})
+  .then(store => {
     if (store) {
       res.status(200).json(store);
     } else {

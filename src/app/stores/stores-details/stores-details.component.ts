@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { StoresService } from 'src/app/shared/stores.services';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, ParamMap } from '@angular/router';
 import { Store } from 'src/app/models/store.model';
+import { GamesService } from 'src/app/shared/games.services';
 
 @Component({
   selector: 'app-stores-details',
@@ -11,18 +12,22 @@ import { Store } from 'src/app/models/store.model';
 export class StoresDetailsComponent implements OnInit {
   store: Store;
   storeId: string;
+  gameId: string;
+  isCollapsed: true;
 
-  constructor(public storesService: StoresService, private route: ActivatedRoute) { }
+  constructor(public storesService: StoresService, public gamesService: GamesService,  private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.params
-      .subscribe(
-        (params: Params) => {
-          this.storesService.getStore(this.storeId).subscribe(gameData => {
-            this.store = {id: gameData._id, title: gameData.title, address: gameData.address, games: gameData.games};
-            console.log(this.store.id);
-          });
-        }
-      );
-    }
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      this.storeId = paramMap.get('storeId');
+      this.storesService.getStore(this.storeId).subscribe(storeData => {
+        this.store = {
+          id: storeData._id,
+          title: storeData.title,
+          address: storeData.address,
+          games: storeData.games
+        };
+      });
+    });
+  }
 }
