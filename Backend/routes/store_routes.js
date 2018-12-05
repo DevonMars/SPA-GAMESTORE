@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.get('', (req, res, next) => {
   Store.find()
-  .populate('games')
   .then(documents => {
     res.status(200).json({
       message: 'Store fetched succesfully',
@@ -20,6 +19,7 @@ router.get('', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const storeId = req.params.id;
   Store.findById({_id: storeId})
+  .populate('games')
   .then(store => {
     if (store) {
       res.status(200).json(store);

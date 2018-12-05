@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, NgForm, FormGroup, Validators, NgModel} from '@angular/forms';
+import {FormControl, NgForm} from '@angular/forms';
 import { StoresService } from 'src/app/shared/stores.services';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Store } from 'src/app/models/store.model';
@@ -19,6 +19,7 @@ export class StoresCreateComponent implements OnInit {
   storeId: string;
   games: Game[];
   store: Store;
+  formControlObj: FormControl;
 
   constructor(public storesService: StoresService, public gamesService: GamesService,
     public router: Router, public route: ActivatedRoute) {}
@@ -41,9 +42,14 @@ export class StoresCreateComponent implements OnInit {
         this.gamesService.gamesUpdated
         .subscribe((games: Game[]) => {
           this.games = games;
-
           });
       });
+
+      this.formControlObj = new FormControl(this.selectedValue);
+  }
+
+  onShowGames() {
+    this.formControlObj.setValue(this.selectedValue);
   }
 
   onSetSelectedGames() {

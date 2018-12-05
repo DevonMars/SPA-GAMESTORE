@@ -1,24 +1,16 @@
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
-  <h1>{{store?.title}}</h1>
-  <p *ngFor="let game of store.games">{{game.title}}</p>
-<hr>
-
-
-<!-- <div *ngIf="store?.games.length > 0">
-  <a
-    *ngFor="let game of store?.games"
-    style="cursor: pointer;"
-    class="list-group-item clearfix">
-    <div class="row">
-      <h4 class="list-group-item-heading">{{ game.title }}</h4>
-
-    </div>
-  </a>
-
-  </div> -->
-
+  <div class="col-md-4">
+      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center">
+          <mat-card class="card-picture" multi="true" *ngFor="let game of store?.games" >
+            <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+              <span fxFlex="100%">{{game.title}}</span>
+            </mat-card-title>
+            <mat-card-content>
+              <p>{{game.discription}}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+  </div>
 </div>
-
-
-
-

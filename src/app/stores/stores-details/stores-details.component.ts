@@ -14,13 +14,16 @@ export class StoresDetailsComponent implements OnInit {
   storeId: string;
   gameId: string;
   isCollapsed: true;
+  isLoading = false;
 
   constructor(public storesService: StoresService, public gamesService: GamesService,  private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.storeId = paramMap.get('storeId');
+      this.isLoading = true;
       this.storesService.getStore(this.storeId).subscribe(storeData => {
+        this.isLoading = false;
         this.store = {
           id: storeData._id,
           title: storeData.title,
