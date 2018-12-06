@@ -19,7 +19,10 @@ export class StoresCreateComponent implements OnInit {
   storeId: string;
   games: Game[];
   store: Store;
+  gamesSubscription: Subscription;
   formControlObj: FormControl;
+  compareByValue = true;
+
 
   constructor(public storesService: StoresService, public gamesService: GamesService,
     public router: Router, public route: ActivatedRoute) {}
@@ -33,7 +36,9 @@ export class StoresCreateComponent implements OnInit {
           this.storesService.getStore(this.storeId).subscribe(gameData => {
             this.isLoading = false;
             this.store = {id: gameData._id, title: gameData.title, address: gameData.address, games: gameData.games};
+            console.log(this.store);
           });
+          console.log(this.store);
         } else {
           this.mode = 'create';
           this.storeId = null;
@@ -44,17 +49,17 @@ export class StoresCreateComponent implements OnInit {
           this.games = games;
           });
       });
-
-      this.formControlObj = new FormControl(this.selectedValue);
   }
 
-  onShowGames() {
-    this.formControlObj.setValue(this.selectedValue);
-  }
 
   onSetSelectedGames() {
     this.selectedValue = this.games.filter(o1 => this.store.games.some(o2 => o1.id === o2.id));
   }
+
+  compareFn(a: Game, b: Game) {
+    return a.id === b.id;
+
+}
 
     onSaveStore(form: NgForm) {
       if (form.invalid) {

@@ -51,7 +51,9 @@ router.put('/:id', (req, res, next) => {
     address: req.body.address,
     games: req.body.games
   });
-  Store.updateOne({_id: req.params.id}, store).then(result => {
+  Store.findByIdAndUpdate({_id: req.params.id}, store)
+  .populate('games')
+  .then(result => {
     res.status(200).json({message: 'Update successful!'});
   });
 });
