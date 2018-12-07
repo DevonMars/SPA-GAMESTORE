@@ -12,5 +12,18 @@
             </mat-card-content>
           </mat-card>
         </div>
+        <br>
+        <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center">
+            <mat-card class="card-picture" multi="true" *ngFor="let accessory of store?.accessories" >
+              <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+                <span fxFlex="100%">{{accessory.title}}</span>
+              </mat-card-title>
+              <mat-card-content>
+                <p>{{accessory.discription}}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
   </div>
 </div>
+

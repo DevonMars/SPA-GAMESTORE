@@ -28,7 +28,8 @@ export class StoresDetailsComponent implements OnInit {
           id: storeData._id,
           title: storeData.title,
           address: storeData.address,
-          games: storeData.games
+          games: storeData.games,
+          accessories: storeData.accessories
         };
       });
     });

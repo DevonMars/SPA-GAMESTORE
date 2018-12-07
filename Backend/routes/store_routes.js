@@ -1,7 +1,6 @@
 const express = require("express");
 
 const Store = require("../models/store.model");
-const Game = require("../models/game.model");
 
 const router = express.Router();
 
@@ -20,6 +19,7 @@ router.get('/:id', (req, res, next) => {
   const storeId = req.params.id;
   Store.findById({_id: storeId})
   .populate('games')
+  .populate('accessories')
   .then(store => {
     if (store) {
       res.status(200).json(store);
@@ -33,7 +33,8 @@ router.post('', (req, res, next) => {
   const store = new Store({
     title: req.body.title,
     address: req.body.address,
-    games: req.body.games
+    games: req.body.games,
+    accessories: req.body.accessories
   });
 
   store.save().then(createdStore => {
@@ -49,10 +50,12 @@ router.put('/:id', (req, res, next) => {
     _id: req.body.id,
     title: req.body.title,
     address: req.body.address,
-    games: req.body.games
+    games: req.body.games,
+    accessories: req.body.accessories
   });
   Store.findByIdAndUpdate({_id: req.params.id}, store)
   .populate('games')
+  .populate('accessories')
   .then(result => {
     res.status(200).json({message: 'Update successful!'});
   });

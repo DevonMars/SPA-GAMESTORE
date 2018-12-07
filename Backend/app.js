@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const moongoose =require('mongoose');
 const gamesRoutes = require("./routes/game_routes");
 const storesRoutes = require("./routes/store_routes");
+const accessoriesRoutes = require("./routes/accessory_routes");
 
 const app = express();
 
@@ -43,5 +44,6 @@ app.use((req, res, next) => {
 
 app.use("/api/games", gamesRoutes);
 app.use("/api/stores", storesRoutes);
+app.use("/api/accessories", accessoriesRoutes);
 
 module.exports = app;

@@ -24,14 +24,20 @@
         #address="ngModel"></textarea>
       <mat-error *ngIf="address.invalid">Please enter the address.</mat-error>
     </mat-form-field>
-
     <mat-form-field>
       <mat-select
-      [compareWith]="compareFn" placeholder="Games" multiple [(ngModel)]="selectedValue" name="games"  required>
+      placeholder="Games" multiple [(ngModel)]="selectedGames" name="games" required>
       <mat-option *ngFor="let game of games" [value]="game?.id">{{game.title}}</mat-option>
       </mat-select>
+      <p *ngFor="let game of store?.games"> Stored Game: {{ game?.title}} </p>
     </mat-form-field>
-    <p> Value: {{ selectedValue | json }} </p>
+    <mat-form-field>
+      <mat-select
+      placeholder="Accessories" multiple [(ngModel)]="selectedAccessories" name="accessories" required>
+      <mat-option *ngFor="let accessory of accessories" [value]="accessory?.id">{{accessory.title}}</mat-option>
+      </mat-select>
+      <p *ngFor="let accessory of store?.accessories"> Stored Accessory: {{ accessory?.title}} </p>
+    </mat-form-field>
     <button
       mat-raised-button
       color="accent"

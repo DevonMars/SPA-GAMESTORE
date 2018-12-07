@@ -6,6 +6,8 @@ import { Store } from 'src/app/models/store.model';
 import { GamesService } from 'src/app/shared/games.services';
 import { Game } from 'src/app/models/game.model';
 import { Subscription } from 'rxjs';
+import { Accessory } from 'src/app/models/accessory.model';
+import { AccessoriesService } from 'src/app/shared/accessories.services';
 
 @Component({
   selector: 'app-stores-create',
@@ -15,16 +17,18 @@ import { Subscription } from 'rxjs';
 export class StoresCreateComponent implements OnInit {
   isLoading = false;
   private mode = 'create';
-  selectedValue = [];
+  selectedGames = [];
+  selectedAccessories = [];
   storeId: string;
   games: Game[];
+  accessories: Accessory[];
   store: Store;
   gamesSubscription: Subscription;
   formControlObj: FormControl;
   compareByValue = true;
 
 
-  constructor(public storesService: StoresService, public gamesService: GamesService,
+  constructor(public storesService: StoresService, public gamesService: GamesService, public accessoriesService: AccessoriesService,
     public router: Router, public route: ActivatedRoute) {}
 
     ngOnInit() {
@@ -35,7 +39,8 @@ export class StoresCreateComponent implements OnInit {
           this.isLoading = true;
           this.storesService.getStore(this.storeId).subscribe(gameData => {
             this.isLoading = false;
-            this.store = {id: gameData._id, title: gameData.title, address: gameData.address, games: gameData.games};
+            this.store = {id: gameData._id, title: gameData.title, address: gameData.address,
+              games: gameData.games, accessories: gameData.accessories};
             console.log(this.store);
           });
           console.log(this.store);
@@ -44,36 +49,33 @@ export class StoresCreateComponent implements OnInit {
           this.storeId = null;
         }
         this.gamesService.getGames();
-        this.gamesService.gamesUpdated
-        .subscribe((games: Game[]) => {
-          this.games = games;
-          });
+        this.gamesService.gamesUpdated.subscribe((games: Game[]) => { this.games = games; });
+        this.accessoriesService.getAccessories();
+        this.accessoriesService.accessoriesUpdated.subscribe((accessories: Accessory[]) => { this.accessories = accessories; });
       });
   }
 
 
   onSetSelectedGames() {
-    this.selectedValue = this.games.filter(o1 => this.store.games.some(o2 => o1.id === o2.id));
+    this.selectedGames = this.games.filter(o1 => this.store.games.some(o2 => o1.id === o2.id));
   }
-
-  compareFn(a: Game, b: Game) {
-    return a.id === b.id;
-
-}
-
+  onSetSelectedAccessories() {
+    this.selectedAccessories = this.accessories.filter(o1 => this.store.accessories.some(o2 => o1.id === o2.id));
+  }
     onSaveStore(form: NgForm) {
       if (form.invalid) {
         return;
       }
       this.isLoading = true;
       if (this.mode === 'create') {
-        this.storesService.addStore(form.value.title, form.value.address, form.value.games);
+        this.storesService.addStore(form.value.title, form.value.address, form.value.games, form.value.accessories );
       } else {
         this.storesService.updateStore(
           this.storeId,
           form.value.title,
           form.value.address,
-          form.value.games
+          form.value.games,
+          form.value.accessories
         );
       }
       form.resetForm();

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Game } from '../models/game.model';
+import { Accessory } from '../models/accessory.model';
 
 
 @Injectable({providedIn: 'root'})
@@ -12,6 +13,7 @@ export class StoresService {
   stores: Store[] = [];
   storesUpdated = new Subject<Store[]>();
   game: Game;
+  accessory: Accessory;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -26,7 +28,8 @@ export class StoresService {
             title: store.title,
             discription: store.discription,
             id: store._id,
-            games: store.games
+            games: store.games,
+            accessories: store.accessories
           };
         });
       }))
@@ -41,13 +44,13 @@ export class StoresService {
   }
 
   getStore(id: string) {
-    return this.http.get<{_id: string; title: string; address: string; games: Game[] }>(
+    return this.http.get<{_id: string; title: string; address: string; games: Game[]; accessories: Accessory[] }>(
       'http://localhost:3000/api/stores/' + id
     );
   }
 
-  addStore(title: string, address: string, games: Game[]) {
-    const store: Store = { id: null, title: title, address: address,  games: games};
+  addStore(title: string, address: string, games: Game[], accessories: Accessory[] ) {
+    const store: Store = { id: null, title: title, address: address,  games: games, accessories: accessories};
     this.http.post<{message: string, storeId: string}>('http://localhost:3000/api/stores', store)
     .subscribe((responseData) => {
       const storeId = responseData.storeId;
@@ -59,8 +62,8 @@ export class StoresService {
     });
   }
 
-  updateStore(id: string, title: string, address: string, games: Game[]) {
-    const store: Store = { id: id, title: title, address: address,  games: games};
+  updateStore(id: string, title: string, address: string, games: Game[], accessories: Accessory[] ) {
+    const store: Store = { id: id, title: title, address: address, games: games, accessories: accessories };
     this.http.put('http://localhost:3000/api/stores/' + id, store)
     .subscribe(response => {
       const updatedStores = [...this.stores];

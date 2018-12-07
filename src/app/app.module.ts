@@ -16,6 +16,10 @@ import { StoresComponent } from './stores/stores.component';
 import { StoresListComponent } from './stores/stores-list/stores-list.component';
 import { StoresDetailsComponent } from './stores/stores-details/stores-details.component';
 import { StoresCreateComponent } from './stores/stores-create/stores-create.component';
+import { AccessoriesComponent } from './accessories/accessories.component';
+import { AccessoriesListComponent } from './accessories/accessories-list/accessories-list.component';
+import { AccessoriesDetailsComponent } from './accessories/accessories-details/accessories-details.component';
+import { AccessoriesCreateComponent } from './accessories/accessories-create/accessories-create.component';
 
 
 @NgModule({
@@ -28,7 +32,11 @@ import { StoresCreateComponent } from './stores/stores-create/stores-create.comp
     StoresComponent,
     StoresListComponent,
     StoresDetailsComponent,
-    StoresCreateComponent
+    StoresCreateComponent,
+    AccessoriesComponent,
+    AccessoriesListComponent,
+    AccessoriesDetailsComponent,
+    AccessoriesCreateComponent
   ],
   imports: [
     BrowserModule,

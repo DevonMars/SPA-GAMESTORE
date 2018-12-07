@@ -1,12 +1,7 @@
-import { Game } from './game.model';
-import { Accessory} from './accessory.model';
-
-export interface Store {
+export interface Accessory {
   id: string;
   title: string;
-  address: string;
-  games: Game[];
-  accessories: Accessory[];
+  discription: string;
   // age: number;
   // publisher: string;
   // developer: string;
