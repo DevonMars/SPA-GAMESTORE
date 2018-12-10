@@ -1,15 +1,28 @@
 const express = require("express");
 const Store = require("../models/store.model");
-
+const checkAuth = require('../middleware/check-auth');
 const router = express.Router();
 
 
 router.get('', (req, res, next) => {
-  Store.find()
-  .then(documents => {
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const storeQuery = Store.find();
+  let fetchedStores;
+  if (pageSize && currentPage) {
+    storeQuery
+    .skip(pageSize * (currentPage - 1))
+    .limit(pageSize);
+  }
+  storeQuery.then(documents => {
+    fetchedStores = documents
+    return Store.countDocuments();
+  })
+  .then(count => {
     res.status(200).json({
-      message: 'Store fetched succesfully',
-      stores: documents
+      message: 'Stores fetched succesfully',
+      stores: fetchedStores,
+      maxStores: count
     });
   });
 });
@@ -28,7 +41,7 @@ router.get('/:id', (req, res, next) => {
   })
 })
 
-router.post('', (req, res, next) => {
+router.post('', checkAuth, (req, res, next) => {
   const store = new Store({
     title: req.body.title,
     address: req.body.address,
@@ -44,7 +57,7 @@ router.post('', (req, res, next) => {
   });
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', checkAuth, (req, res, next) => {
   const store = new Store({
     _id: req.body.id,
     title: req.body.title,
@@ -60,7 +73,7 @@ router.put('/:id', (req, res, next) => {
   });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", checkAuth, (req, res, next) => {
   Store.deleteOne({ _id: req.params.id }).then(result => {
     res.status(200).json({ message: "Store deleted!" });
   });

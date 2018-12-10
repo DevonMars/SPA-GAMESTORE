@@ -3,6 +3,8 @@ import { StoresService } from 'src/app/shared/stores.services';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store } from 'src/app/models/store.model';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/shared/auth.services';
+import { PageEvent } from '@angular/material';
 
 @Component({
   selector: 'app-stores-list',
@@ -12,18 +14,39 @@ import { Subscription } from 'rxjs';
 export class StoresListComponent implements OnInit, OnDestroy {
   stores: Store[] = [];
   isLoading = false;
+  totalStores = 0;
+  storesPerPage = 5;
+  currentPage = 1;
+  pageSizeOptions = [1, 2, 5, 10];
   private storesSub: Subscription;
+  userIsAuthenticated = false;
+  private authStatusSub: Subscription;
 
-  constructor(public storesService: StoresService, private router: Router, private route: ActivatedRoute) {}
+  // tslint:disable-next-line:max-line-length
+  constructor(public storesService: StoresService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.isLoading = true;
-    this.storesService.getStores();
+    this.storesService.getStores(this.storesPerPage, this.currentPage);
     this.storesSub = this.storesService.getStoreUpdateListener()
-      .subscribe((stores: Store[]) => {
-        this.isLoading = false;
-        this.stores = stores;
+    .subscribe((storeData: {stores: Store[], storeCount: number}) => {
+      this.isLoading = false;
+      this.totalStores = storeData.storeCount;
+      this.stores = storeData.stores;
+    });
+      this.userIsAuthenticated = this.authService.getIsAuth();
+      this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
       });
+  }
+
+  onChangedPage(pageData: PageEvent) {
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.storesPerPage = pageData.pageSize;
+    this.storesService.getStores(this.storesPerPage, this.currentPage);
   }
 
   onAddStore() {
@@ -31,12 +54,15 @@ export class StoresListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(storeId: string) {
-    this.storesService.deleteStore(storeId);
+    this.storesService.deleteStore(storeId).subscribe(() => {
+      this.storesService.getStores(this.storesPerPage, this.currentPage);
+    });
   }
 
 
   ngOnDestroy() {
     this.storesSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
 
 }

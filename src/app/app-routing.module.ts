@@ -34,9 +34,9 @@ const routes: Routes = [
   { path: 'stores', component: StoresComponent,
   children: [
     { path: '', component: StoresListComponent },
-    { path: 'create', component: StoresCreateComponent },
+    { path: 'create', component: StoresCreateComponent, canActivate: [AuthGuard] },
     { path: ':storeId', component: StoresDetailsComponent},
-    { path: ':storeId/edit', component: StoresCreateComponent},
+    { path: ':storeId/edit', component: StoresCreateComponent, canActivate: [AuthGuard] },
   ]},
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent}

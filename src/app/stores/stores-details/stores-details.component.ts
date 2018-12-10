@@ -12,11 +12,9 @@ import { GamesService } from 'src/app/shared/games.services';
 export class StoresDetailsComponent implements OnInit {
   store: Store;
   storeId: string;
-  gameId: string;
-  isCollapsed: true;
   isLoading = false;
 
-  constructor(public storesService: StoresService, public gamesService: GamesService,  private route: ActivatedRoute) { }
+  constructor(public storesService: StoresService,  private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {

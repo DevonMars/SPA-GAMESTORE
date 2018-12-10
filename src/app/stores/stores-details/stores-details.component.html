@@ -1,24 +1,67 @@
-
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
+  <div class="title">
+    <h1>{{ store.title }}</h1>
+  </div>
+  <div>
+    <h3>Address:</h3>
+    <p>{{ store.address }}</p>
+  </div>
+  <br>
+  <hr>
   <div class="col-md-4">
-      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center">
-          <mat-card class="card-picture" multi="true" *ngFor="let game of store?.games" >
-            <img mat-card-image [src]="game.imagePath" alt="game.title">
-            <!-- <mat-card-content>
-              <p>{{game.discription}}</p>
-            </mat-card-content> -->
-          </mat-card>
-        </div>
-        <br>
-        <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center">
-            <mat-card class="card-picture" multi="true" *ngFor="let accessory of store?.accessories" >
-              <img mat-card-image [src]="accessory.imagePath" alt="accessory.title">
-              <!-- <mat-card-content>
-              </mat-card-content> -->
-            </mat-card>
-          </div>
-
+    <div><h2>Games:</h2></div>
+    <div>
+      <div
+        fxLayout="row wrap"
+        fxLayout.xs="column"
+        fxLayoutGap="1%"
+        fxLayoutAlign="left"
+      >
+        <mat-card
+          class="card-picture"
+          multi="true"
+          *ngFor="let game of store?.games"
+        >
+          <img mat-card-image [src]="game.imagePath" alt="game.title" />
+        </mat-card>
+      </div>
+      <p
+        class="info-text mat-body-1"
+        *ngIf="store?.games.length <= 0 && !isLoading"
+      >
+        No games added yet
+      </p>
+    </div>
+    <br />
+    <hr>
+    <div><h2>Accessories:</h2></div>
+    <div>
+      <div
+        fxLayout="row wrap"
+        fxLayout.xs="column"
+        fxLayoutGap="1%"
+        fxLayoutAlign="left"
+        *ngIf="store?.accessories.length > 0 && !isLoading"
+      >
+        <mat-card
+          class="card-picture"
+          multi="true"
+          *ngFor="let accessory of store?.accessories"
+        >
+          <img
+            mat-card-image
+            [src]="accessory.imagePath"
+            alt="accessory.title"
+          />
+        </mat-card>
+      </div>
+      <p
+        class="info-text mat-body-1"
+        *ngIf="store?.accessories.length <= 0 && !isLoading"
+      >
+        No accessories added yet
+      </p>
+    </div>
   </div>
 </div>
-

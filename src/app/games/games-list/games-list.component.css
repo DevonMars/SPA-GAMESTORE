@@ -15,13 +15,13 @@ mat-paginator {
   max-width: 1100px;
   height: 100px;
   border-radius: 3px;
-
 }
 .card-picture {
   width: 250px;
   margin: 22px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
+  background-color: rgba(0,0,0,.03)
 }
 
 mat-card-actions {
@@ -32,7 +32,4 @@ mat-spinner {
   margin: auto;
 }
 
-/* .card-title {
-  text-align: center
-} */
 

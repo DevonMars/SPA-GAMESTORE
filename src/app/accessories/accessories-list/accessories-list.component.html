@@ -5,7 +5,8 @@
       <button mat-flat-button color="primary" (click)="onAddAccessory()" *ngIf="userIsAuthenticated">Add Accessory</button>
       <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center" *ngIf="accessories.length > 0 && !isLoading">
           <mat-card class="card-picture" multi="true" *ngFor="let accessory of accessories" >
-            <img mat-card-image [src]="accessory.imagePath" alt="accessory.title">
+            <a style="cursor: pointer;" [routerLink]="accessory.id" routerLinkActive="active">
+            <img mat-card-image [src]="accessory.imagePath" alt="accessory.title"></a>
             <mat-card-actions *ngIf="userIsAuthenticated">
                 <button mat-button color="primary" fxFlex="50%" [routerLink]="[accessory.id,'edit']">EDIT</button>
                 <button mat-button color="warn" fxFlex="50%" (click)="onDelete(accessory.id)">DELETE</button>
