@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PageEvent } from '@angular/material';
 import { GamesService } from 'src/app/shared/games.services';
 import { Game } from '../../models/game.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/shared/auth.services';
+
 
 @Component({
   selector: 'app-games-list',
@@ -13,18 +16,38 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   games: Game[] = [];
   isLoading = false;
+  totalGames = 0;
+  gamesPerPage = 5;
+  currentPage = 1;
+  pageSizeOptions = [1, 2, 5, 10];
+  userIsAuthenticated = false;
   private gamesSub: Subscription;
+  private authStatusSub: Subscription;
 
-  constructor(public gamesService: GamesService, private router: Router, private route: ActivatedRoute) {}
+  constructor(public gamesService: GamesService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.isLoading = true;
-    this.gamesService.getGames();
+    this.gamesService.getGames(this.gamesPerPage, this.currentPage);
     this.gamesSub = this.gamesService.getGameUpdateListener()
-      .subscribe((games: Game[]) => {
+      .subscribe((gameData: {games: Game[], gameCount: number}) => {
         this.isLoading = false;
-        this.games = games;
+        this.totalGames = gameData.gameCount;
+        this.games = gameData.games;
       });
+      this.userIsAuthenticated = this.authService.getIsAuth();
+      this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+      });
+  }
+
+  onChangedPage(pageData: PageEvent) {
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.gamesPerPage = pageData.pageSize;
+    this.gamesService.getGames(this.gamesPerPage, this.currentPage);
   }
 
   onAddGame() {
@@ -32,11 +55,14 @@ export class GamesListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(gameId: string) {
-    this.gamesService.deleteGame(gameId);
+    this.gamesService.deleteGame(gameId).subscribe(() => {
+      this.gamesService.getGames(this.gamesPerPage, this.currentPage);
+    });
   }
 
   ngOnDestroy() {
     this.gamesSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
 
 

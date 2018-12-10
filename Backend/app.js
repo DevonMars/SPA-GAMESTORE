@@ -1,9 +1,11 @@
+const path = require('path');
 const express = require("express");
 const bodyParser = require('body-parser');
 const moongoose =require('mongoose');
 const gamesRoutes = require("./routes/game_routes");
 const storesRoutes = require("./routes/store_routes");
 const accessoriesRoutes = require("./routes/accessory_routes");
+const userRoutes = require('./routes/user_routes');
 
 const app = express();
 
@@ -18,26 +20,19 @@ moongoose.set('useCreateIndex', true);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/images", express.static(path.join("Backend/images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
   next();
-  // if (req.method === 'OPTIONS') {
-  //       res.status(200);
-  //       res.end();
-  //   }
-  //   else {
-  //       // Pass to next layer of middleware
-  //       next();
-  //   }
 });
 
 
@@ -45,5 +40,6 @@ app.use((req, res, next) => {
 app.use("/api/games", gamesRoutes);
 app.use("/api/stores", storesRoutes);
 app.use("/api/accessories", accessoriesRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;

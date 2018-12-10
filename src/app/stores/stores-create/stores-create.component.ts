@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, NgForm} from '@angular/forms';
+import {FormControl, NgForm, FormGroup, Validators} from '@angular/forms';
 import { StoresService } from 'src/app/shared/stores.services';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Store } from 'src/app/models/store.model';
 import { GamesService } from 'src/app/shared/games.services';
 import { Game } from 'src/app/models/game.model';
-import { Subscription } from 'rxjs';
 import { Accessory } from 'src/app/models/accessory.model';
 import { AccessoriesService } from 'src/app/shared/accessories.services';
 
@@ -19,19 +18,33 @@ export class StoresCreateComponent implements OnInit {
   private mode = 'create';
   selectedGames = [];
   selectedAccessories = [];
+
   storeId: string;
   games: Game[];
   accessories: Accessory[];
   store: Store;
-  gamesSubscription: Subscription;
-  formControlObj: FormControl;
-  compareByValue = true;
-
-
+  storeForm: FormGroup;
+  totalCount;
+  contentPerPage;
+  currentPage;
   constructor(public storesService: StoresService, public gamesService: GamesService, public accessoriesService: AccessoriesService,
     public router: Router, public route: ActivatedRoute) {}
 
     ngOnInit() {
+      this.storeForm = new FormGroup({
+        'title': new FormControl(null, {
+          validators: [Validators.required, Validators.minLength(3)]
+        }),
+        'address': new FormControl(null, {
+          validators: [Validators.required]
+        }),
+        'games': new FormControl(null, {
+          validators: [Validators.required]
+        }),
+        'accessories': new FormControl(null, {
+          validators: [Validators.required]
+        }),
+      });
       this.route.paramMap.subscribe((paramMap: ParamMap) => {
         if (paramMap.has('storeId')) {
           this.mode = 'edit';
@@ -39,19 +52,33 @@ export class StoresCreateComponent implements OnInit {
           this.isLoading = true;
           this.storesService.getStore(this.storeId).subscribe(gameData => {
             this.isLoading = false;
-            this.store = {id: gameData._id, title: gameData.title, address: gameData.address,
-              games: gameData.games, accessories: gameData.accessories};
+            this.store = {
+              id: gameData._id,
+              title: gameData.title,
+              address: gameData.address,
+              games: gameData.games,
+              accessories: gameData.accessories
+            };
+            this.storeForm.setValue({
+              'title': this.store.title,
+              'address': this.store.address,
+              'games': this.store.games,
+              'accessories': this.store.accessories
+            });
             console.log(this.store);
           });
-          console.log(this.store);
         } else {
           this.mode = 'create';
           this.storeId = null;
         }
-        this.gamesService.getGames();
-        this.gamesService.gamesUpdated.subscribe((games: Game[]) => { this.games = games; });
-        this.accessoriesService.getAccessories();
-        this.accessoriesService.accessoriesUpdated.subscribe((accessories: Accessory[]) => { this.accessories = accessories; });
+        this.gamesService.getGames(this.contentPerPage, this.currentPage);
+        this.gamesService.gamesUpdated.subscribe((gameData: {games: Game[], gameCount: number}) => {
+          this.totalCount = gameData.gameCount;
+          this.games = gameData.games; });
+        this.accessoriesService.getAccessories(this.contentPerPage, this.currentPage);
+        this.accessoriesService.accessoriesUpdated.subscribe((accessData: {accessories: Accessory[], accessCount: number}) => {
+          this.totalCount = accessData.accessCount;
+          this.accessories = accessData.accessories; });
       });
   }
 
@@ -62,24 +89,47 @@ export class StoresCreateComponent implements OnInit {
   onSetSelectedAccessories() {
     this.selectedAccessories = this.accessories.filter(o1 => this.store.accessories.some(o2 => o1.id === o2.id));
   }
-    onSaveStore(form: NgForm) {
-      if (form.invalid) {
-        return;
-      }
-      this.isLoading = true;
-      if (this.mode === 'create') {
-        this.storesService.addStore(form.value.title, form.value.address, form.value.games, form.value.accessories );
-      } else {
-        this.storesService.updateStore(
-          this.storeId,
-          form.value.title,
-          form.value.address,
-          form.value.games,
-          form.value.accessories
-        );
-      }
-      form.resetForm();
+
+  onSaveStore() {
+    if (this.storeForm.invalid) {
+      return;
     }
+    this.isLoading = true;
+    if (this.mode === 'create') {
+      this.storesService.addStore(
+        this.storeForm.value.title,
+        this.storeForm.value.address,
+        this.storeForm.value.games,
+        this.storeForm.value.accessories );
+    } else {
+      this.storesService.updateStore(
+        this.storeId,
+        this.storeForm.value.title,
+        this.storeForm.value.address,
+        this.storeForm.value.games,
+        this.storeForm.value.accessories
+      );
+    }
+    this.storeForm.reset();
+  }
+    // onSaveStore(form: NgForm) {
+    //   if (form.invalid) {
+    //     return;
+    //   }
+    //   this.isLoading = true;
+    //   if (this.mode === 'create') {
+    //     this.storesService.addStore(form.value.title, form.value.address, form.value.games, form.value.accessories );
+    //   } else {
+    //     this.storesService.updateStore(
+    //       this.storeId,
+    //       form.value.title,
+    //       form.value.address,
+    //       form.value.games,
+    //       form.value.accessories
+    //     );
+    //   }
+    //   form.resetForm();
+    // }
 
 
   }

@@ -11,6 +11,9 @@ import { AccessoriesComponent } from './accessories/accessories.component';
 import { AccessoriesDetailsComponent } from './accessories/accessories-details/accessories-details.component';
 import { AccessoriesCreateComponent } from './accessories/accessories-create/accessories-create.component';
 import { AccessoriesListComponent } from './accessories/accessories-list/accessories-list.component';
+import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { AuthGuard } from './shared/auth.guard';
 
 const routes: Routes = [
 
@@ -18,15 +21,15 @@ const routes: Routes = [
   { path: 'games', component: GamesComponent,
   children: [
     { path: '', component: GamesListComponent },
-    { path: 'create', component: GamesCreateComponent },
-    { path: ':gameId/edit', component: GamesCreateComponent}
+    { path: 'create', component: GamesCreateComponent, canActivate: [AuthGuard] },
+    { path: ':gameId/edit', component: GamesCreateComponent, canActivate: [AuthGuard] }
   ]},
   { path: 'accessories', component: AccessoriesComponent,
   children: [
     { path: '', component: AccessoriesListComponent },
-    { path: 'create', component: AccessoriesCreateComponent },
+    { path: 'create', component: AccessoriesCreateComponent, canActivate: [AuthGuard]  },
     { path: ':accessoryId', component: AccessoriesDetailsComponent},
-    { path: ':accessoryId/edit', component: AccessoriesCreateComponent}
+    { path: ':accessoryId/edit', component: AccessoriesCreateComponent, canActivate: [AuthGuard] }
   ]},
   { path: 'stores', component: StoresComponent,
   children: [
@@ -34,11 +37,15 @@ const routes: Routes = [
     { path: 'create', component: StoresCreateComponent },
     { path: ':storeId', component: StoresDetailsComponent},
     { path: ':storeId/edit', component: StoresCreateComponent},
-  ]}
+  ]},
+  { path: 'login', component: LoginComponent},
+  { path: 'signup', component: SignupComponent}
+
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }

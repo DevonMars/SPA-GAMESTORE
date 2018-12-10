@@ -7,5 +7,5 @@ export interface Accessory {
   // developer: string;
   // spokenLanguage: string;
   // subtitles: string;
-  // imagePath: string;
+  imagePath: string;
 }

@@ -1,5 +1,4 @@
 const express = require("express");
-
 const Store = require("../models/store.model");
 
 const router = express.Router();
@@ -53,7 +52,7 @@ router.put('/:id', (req, res, next) => {
     games: req.body.games,
     accessories: req.body.accessories
   });
-  Store.findByIdAndUpdate({_id: req.params.id}, store)
+  Store.findOneAndUpdate({_id: req.params.id}, store)
   .populate('games')
   .populate('accessories')
   .then(result => {

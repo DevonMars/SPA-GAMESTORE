@@ -11,4 +11,16 @@
         <a mat-button routerLink="/stores" routerLinkActive="mat-accent">Stores</a>
       </li>
     </ul>
+    <span class="spacer"></span>
+    <ul>
+        <li *ngIf="!userIsAuthenticated">
+          <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
+        </li>
+        <li *ngIf="!userIsAuthenticated">
+            <a mat-button routerLink="/signup" routerLinkActive="mat-accent">Signup</a>
+        </li>
+        <li *ngIf="userIsAuthenticated">
+            <button mat-button (click)="onLogout()">logout</button>
+        </li>
+    </ul>
 </mat-toolbar>

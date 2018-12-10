@@ -1,24 +1,24 @@
-
 <br>
-<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
   <div class="col-md-4">
-      <button mat-flat-button color="primary" (click)="onAddGame()">Add Game</button>
-      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center">
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <button mat-flat-button color="primary" (click)="onAddGame()" *ngIf="userIsAuthenticated">Add Game</button>
+      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center" *ngIf="games.length > 0 && !isLoading">
           <mat-card class="card-picture" multi="true" *ngFor="let game of games" >
-            <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
-              <span fxFlex="100%">{{game.title}}</span>
-            </mat-card-title>
-            <!-- <mat-card-content>
-              <p>{{game.discription}}</p>
-            </mat-card-content> -->
-            <mat-card-actions class="action">
+            <img mat-card-image [src]="game.imagePath" alt="game.title">
+            <mat-card-actions *ngIf="userIsAuthenticated">
                 <button mat-button color="primary" fxFlex="50%" [routerLink]="[game.id,'edit']">EDIT</button>
-                <!-- <button mat-button color="primary" fxFlex="50%" [routerLink]="['/edit', game.id]">EDIT</button> -->
                 <button mat-button color="warn" fxFlex="50%" (click)="onDelete(game.id)">DELETE</button>
               </mat-card-actions>
-            <!-- <img mat-card-image [src]="picture.img"> -->
           </mat-card>
-        </div>
+      </div>
+      <mat-paginator [length]="totalGames" [pageSize]="gamesPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="games.length > 0"></mat-paginator>
   </div>
 </div>
+<p class="info-text mat-body-1" *ngIf="games.length <= 0 && !isLoading">No games added yet</p>
+
+
+
+<!-- <mat-card-title class="card-title" fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutAlign="center center">
+    <span fxFlex="100%">{{game.title}}</span>
+  </mat-card-title> -->

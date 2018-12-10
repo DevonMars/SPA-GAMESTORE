@@ -1,8 +1,15 @@
 
 .img {
-  width: 100%;
-  margin-bottom: 18%;
+  object-fit: cover; /*this makes de image in src fit to the size of specified below*/
+  width: 100%; /* Here you can use wherever you want to specify the width and also the height of the <img>*/
+  height: 80%;
 }
+
+mat-paginator {
+  margin-top: 1rem
+}
+
+
 .container {
   margin: 0 auto;
   max-width: 1100px;
@@ -17,7 +24,7 @@
   transition: 0.3s;
 }
 
-.action {
+mat-card-actions {
   border-top: 1px solid rgba(0,0,0,.125);
 }
 
@@ -25,4 +32,7 @@ mat-spinner {
   margin: auto;
 }
 
+/* .card-title {
+  text-align: center
+} */
 

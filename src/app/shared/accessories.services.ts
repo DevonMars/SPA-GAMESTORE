@@ -8,27 +8,29 @@ import { Router } from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class AccessoriesService {
   private accessories: Accessory[] = [];
-  accessoriesUpdated = new Subject<Accessory[]>();
+  accessoriesUpdated = new Subject<{accessories: Accessory[], accessCount: number}>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getAccessories() {
+  getAccessories(accessPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${accessPerPage}&page=${currentPage}`;
     this.http
-      .get<{ message: string; accessories: any }>(
-        'http://localhost:3000/api/accessories'
+      .get<{ message: string; accessories: any, maxAccessories: number }>(
+        'http://localhost:3000/api/accessories' + queryParams
       )
       .pipe(map((accessoryData) => {
-        return accessoryData.accessories.map(accessory => {
+        return { accessories: accessoryData.accessories.map(accessory => {
           return {
             title: accessory.title,
             discription: accessory.discription,
-            id: accessory._id
+            id: accessory._id,
+            imagePath: accessory.imagePath
           };
-        });
+        }), maxGames: accessoryData.maxAccessories};
       }))
-      .subscribe(transformedAccessories => {
-        this.accessories = transformedAccessories;
-        this.accessoriesUpdated.next([...this.accessories]);
+      .subscribe(transformedAccessoriesData => {
+        this.accessories = transformedAccessoriesData.accessories;
+        this.accessoriesUpdated.next({accessories: [...this.accessories], accessCount: transformedAccessoriesData.maxGames});
       });
   }
 
@@ -37,44 +39,45 @@ export class AccessoriesService {
   }
 
   getAccessory(id: string) {
-    return this.http.get<{  _id: string; title: string; discription: string }>(
+    return this.http.get<{  _id: string; title: string; discription: string, imagePath: string }>(
       'http://localhost:3000/api/accessories/' + id
     );
   }
 
-  addAccessory(title: string, discription: string) {
-    const accessory: Accessory = {id: null, title: title, discription: discription };
-    this.http.post<{message: string, accessoryId: string}>('http://localhost:3000/api/accessories', accessory)
+  addAccessory(title: string, discription: string, image: File) {
+    const accesData = new FormData();
+    accesData.append('title', title);
+    accesData.append('discription', discription);
+    accesData.append('image', image, title);
+    this.http.post<{message: string, accessory: Accessory}>('http://localhost:3000/api/accessories', accesData)
     .subscribe((responseData) => {
-      const accessoryId = responseData.accessoryId;
-      accessory.id = accessoryId;
-      this.accessories.push(accessory);
-      this.accessoriesUpdated.next([...this.accessories]);
       this.router.navigate(['/']);
     });
   }
 
-  updateAccessory(id: string, title: string, discription: string) {
-    const accessory: Accessory = { id: id, title: title, discription: discription};
-    this.http.put('http://localhost:3000/api/accessories/' + id, accessory)
+  updateAccessory(id: string, title: string, discription: string, image: File | string) {
+    let accesData: Accessory | FormData;
+    if (typeof(image) === 'object') {
+      accesData = new FormData();
+      accesData.append('id', id);
+      accesData.append('title', title);
+      accesData.append('discription', discription);
+      accesData.append('image', image, title);
+    } else {
+      accesData = {
+        id: id,
+        title: title,
+        discription: discription,
+        imagePath: image
+      };
+    }
+    this.http.put('http://localhost:3000/api/accessories/' + id, accesData)
     .subscribe(response => {
-      const updatedAccessories = [...this.accessories];
-      const oldAccessory =  updatedAccessories.findIndex(g => g.id === accessory.id);
-      updatedAccessories[oldAccessory] = accessory;
-      this.accessories = updatedAccessories;
-      this.accessoriesUpdated.next([...this.accessories]);
       this.router.navigate(['/']);
     });
   }
 
   deleteAccessory(accessoryId: string) {
-    this.http.delete('http://localhost:3000/api/accessories/' + accessoryId)
-      .subscribe(() => {
-        console.log('Accessory Deleted!');
-        const updatedAccessories = this.accessories.filter( accessory => accessory.id !== accessoryId);
-        this.accessories = updatedAccessories;
-        this.accessoriesUpdated.next([...this.accessories]);
-      });
+    return this.http.delete('http://localhost:3000/api/accessories/' + accessoryId);
   }
-
  }
