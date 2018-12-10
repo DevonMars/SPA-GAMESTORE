@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StoresService } from 'src/app/shared/stores.services';
-import { ActivatedRoute, Params, ParamMap } from '@angular/router';
+import { ActivatedRoute, Params, ParamMap, Router } from '@angular/router';
 import { Store } from 'src/app/models/store.model';
 import { GamesService } from 'src/app/shared/games.services';
 
@@ -14,7 +14,7 @@ export class StoresDetailsComponent implements OnInit {
   storeId: string;
   isLoading = false;
 
-  constructor(public storesService: StoresService,  private route: ActivatedRoute) { }
+  constructor(public storesService: StoresService, private router: Router,  private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {

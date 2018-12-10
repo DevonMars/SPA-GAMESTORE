@@ -35,12 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api', (req, res) => {
-  res.send({ hi: 'there'});
-});
-
-
-
 app.use("/api/games", gamesRoutes);
 app.use("/api/stores", storesRoutes);
 app.use("/api/accessories", accessoriesRoutes);

@@ -1,11 +1,11 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class="container">
   <div class="title">
-    <h1>{{ store.title }}</h1>
+    <h1>{{ store?.title }}</h1>
   </div>
   <div>
     <h3>Address:</h3>
-    <p>{{ store.address }}</p>
+    <p>{{ store?.address }}</p>
   </div>
   <br>
   <hr>
@@ -44,16 +44,8 @@
         fxLayoutAlign="left"
         *ngIf="store?.accessories.length > 0 && !isLoading"
       >
-        <mat-card
-          class="card-picture"
-          multi="true"
-          *ngFor="let accessory of store?.accessories"
-        >
-          <img
-            mat-card-image
-            [src]="accessory.imagePath"
-            alt="accessory.title"
-          />
+        <mat-card class="card-picture" multi="true" *ngFor="let accessory of store.accessories">
+            <img mat-card-image [src]="accessory.imagePath" alt="accessory.title"/>
         </mat-card>
       </div>
       <p

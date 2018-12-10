@@ -3,16 +3,16 @@
 <div class="container">
   <div>
     <img
-      [src]="accessory.imagePath"
-      alt="{{ accessory.title }}"
+      [src]="accessory?.imagePath"
+      alt="{{ accessory?.title }}"
       style="max-height: 300px;"
     />
   </div>
   <div class="title">
-    <h2>{{ accessory.title }}</h2>
+    <h2>{{ accessory?.title }}</h2>
   </div>
   <div>
     <h5>Discription:</h5>
-    <p>{{ accessory.discription }}</p>
+    <p>{{ accessory?.discription }}</p>
   </div>
 </div>
