@@ -9,7 +9,9 @@ const userRoutes = require('./routes/user_routes');
 
 const app = express();
 
-moongoose.connect('mongodb+srv://devAdmin:pWDxaP3XshZP3-y@cluster0-bxeix.mongodb.net/SPAGamingStoreDB?retryWrites=true', { useNewUrlParser: true })
+moongoose.Promise = global.Promise;
+if(process.env.NODE_ENV !== 'test') {
+  moongoose.connect('mongodb+srv://devAdmin:pWDxaP3XshZP3-y@cluster0-bxeix.mongodb.net/SPAGamingStoreDB?retryWrites=true', { useNewUrlParser: true })
 .then(() => {
   console.log('Connected to Database!')
 })
@@ -17,6 +19,8 @@ moongoose.connect('mongodb+srv://devAdmin:pWDxaP3XshZP3-y@cluster0-bxeix.mongodb
   console.log('Connection failed!')
 });
 moongoose.set('useCreateIndex', true);
+}
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
