@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require("express");
 const bodyParser = require('body-parser');
-const moongoose =require('mongoose');
+const mongoose = require('mongoose');
 const gamesRoutes = require("./routes/game_routes");
 const storesRoutes = require("./routes/store_routes");
 const accessoriesRoutes = require("./routes/accessory_routes");
@@ -9,18 +9,17 @@ const userRoutes = require('./routes/user_routes');
 
 const app = express();
 
-moongoose.Promise = global.Promise;
-if(process.env.NODE_ENV !== 'test') {
-  moongoose.connect('mongodb+srv://devAdmin:pWDxaP3XshZP3-y@cluster0-bxeix.mongodb.net/SPAGamingStoreDB?retryWrites=true', { useNewUrlParser: true })
-.then(() => {
-  console.log('Connected to Database!')
-})
-.catch(() => {
-  console.log('Connection failed!')
-});
-moongoose.set('useCreateIndex', true);
-}
-
+mongoose.Promise = global.Promise;
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect('mongodb+srv://devAdmin:' + process.env.MONGO_ATLAS_PW + '@cluster0-bxeix.mongodb.net/SPAGamingStoreDB?retryWrites=true', { useNewUrlParser: true })
+  .then(() => {
+    console.log('Connected to Database!')
+  })
+  .catch(() => {
+    console.log('Connection failed!')
+  });
+  mongoose.set('useCreateIndex', true);
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/accessories/';
 
 @Injectable({providedIn: 'root'})
 export class AccessoriesService {
@@ -16,7 +19,7 @@ export class AccessoriesService {
     const queryParams = `?pagesize=${accessPerPage}&page=${currentPage}`;
     this.http
       .get<{ message: string; accessories: any, maxAccessories: number }>(
-        'http://localhost:3000/api/accessories' + queryParams
+        BACKEND_URL + queryParams
       )
       .pipe(map((accessoryData) => {
         return { accessories: accessoryData.accessories.map(accessory => {
@@ -40,7 +43,7 @@ export class AccessoriesService {
 
   getAccessory(id: string) {
     return this.http.get<{  _id: string; title: string; discription: string, imagePath: string }>(
-      'http://localhost:3000/api/accessories/' + id
+      BACKEND_URL + id
     );
   }
 
@@ -49,7 +52,7 @@ export class AccessoriesService {
     accesData.append('title', title);
     accesData.append('discription', discription);
     accesData.append('image', image, title);
-    this.http.post<{message: string, accessory: Accessory}>('http://localhost:3000/api/accessories', accesData)
+    this.http.post<{message: string, accessory: Accessory}>( BACKEND_URL, accesData)
     .subscribe((responseData) => {
       this.router.navigate(['/']);
     });
@@ -71,13 +74,13 @@ export class AccessoriesService {
         imagePath: image
       };
     }
-    this.http.put('http://localhost:3000/api/accessories/' + id, accesData)
+    this.http.put( BACKEND_URL + id, accesData)
     .subscribe(response => {
       this.router.navigate(['/']);
     });
   }
 
   deleteAccessory(accessoryId: string) {
-    return this.http.delete('http://localhost:3000/api/accessories/' + accessoryId);
+    return this.http.delete( BACKEND_URL + accessoryId);
   }
  }

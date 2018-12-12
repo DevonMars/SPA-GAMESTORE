@@ -5,7 +5,8 @@
       <button mat-flat-button color="primary" (click)="onAddGame()" *ngIf="userIsAuthenticated">Add Game</button>
       <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1%" fxLayoutAlign="center" *ngIf="games.length > 0 && !isLoading">
           <mat-card class="card-picture" multi="true" *ngFor="let game of games" >
-            <img mat-card-image [src]="game.imagePath" alt="game.title">
+            <a style="cursor: pointer;" [routerLink]="game?.id" routerLinkActive="active">
+            <img mat-card-image [src]="game.imagePath" alt="game.title"></a>
             <mat-card-actions *ngIf="userIsAuthenticated">
                 <button mat-button color="primary" fxFlex="50%" [routerLink]="[game.id,'edit']">EDIT</button>
                 <button mat-button color="warn" fxFlex="50%" (click)="onDelete(game.id)">DELETE</button>

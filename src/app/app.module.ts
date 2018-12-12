@@ -24,6 +24,7 @@ import {SuiModule} from 'ng2-semantic-ui';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { AuthInterceptor } from './shared/auth-interceptor';
+import { GamesDetailsComponent } from './games/games-details/games-details.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { AuthInterceptor } from './shared/auth-interceptor';
     AccessoriesCreateComponent,
     LoginComponent,
     SignupComponent,
+    GamesDetailsComponent,
   ],
   imports: [
     BrowserModule,

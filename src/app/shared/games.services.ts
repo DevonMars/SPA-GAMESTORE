@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import {environment} from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl + '/games/';
 
 @Injectable({providedIn: 'root'})
 export class GamesService {
@@ -16,7 +19,7 @@ export class GamesService {
     const queryParams = `?pagesize=${gamesPerPage}&page=${currentPage}`;
     this.http
       .get<{ message: string; games: any, maxGames: number }>(
-        'http://localhost:3000/api/games' + queryParams
+        BACKEND_URL + queryParams
       )
       .pipe(map((gameData) => {
         return {games: gameData.games.map(game => {
@@ -40,7 +43,7 @@ export class GamesService {
 
   getGame(id: string) {
     return this.http.get<{  _id: string; title: string; discription: string, imagePath: string }>(
-      'http://localhost:3000/api/games/' + id
+      BACKEND_URL + id
     );
   }
 
@@ -49,7 +52,7 @@ export class GamesService {
     gameData.append('title', title);
     gameData.append('discription', discription);
     gameData.append('image', image, title);
-    this.http.post<{message: string, game: Game}>('http://localhost:3000/api/games', gameData)
+    this.http.post<{message: string, game: Game}>(BACKEND_URL, gameData)
     .subscribe((responseData) => {
       this.router.navigate(['/']);
     });
@@ -71,13 +74,13 @@ export class GamesService {
         imagePath: image
       };
     }
-    this.http.put('http://localhost:3000/api/games/' + id, gameData)
+    this.http.put( BACKEND_URL + + id, gameData)
     .subscribe(response => {
       this.router.navigate(['/']);
     });
   }
 
   deleteGame(gameId: string) {
-    return this.http.delete('http://localhost:3000/api/games/' + gameId);
+    return this.http.delete(BACKEND_URL + gameId);
   }
 }

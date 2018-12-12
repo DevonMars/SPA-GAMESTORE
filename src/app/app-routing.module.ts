@@ -14,6 +14,7 @@ import { AccessoriesListComponent } from './accessories/accessories-list/accesso
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { AuthGuard } from './shared/auth.guard';
+import { GamesDetailsComponent } from './games/games-details/games-details.component';
 
 const routes: Routes = [
 
@@ -22,6 +23,7 @@ const routes: Routes = [
   children: [
     { path: '', component: GamesListComponent },
     { path: 'create', component: GamesCreateComponent, canActivate: [AuthGuard] },
+    { path: ':gameId', component: GamesDetailsComponent},
     { path: ':gameId/edit', component: GamesCreateComponent, canActivate: [AuthGuard] }
   ]},
   { path: 'accessories', component: AccessoriesComponent,
