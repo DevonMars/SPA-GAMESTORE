@@ -18,3 +18,24 @@
 //     .then(() => done())
 //     .catch(() => done());
 // });
+
+
+const mongoose = require('mongoose')
+mongoose.Promise = global.Promise
+const mongodb = require('../Backend/config/mongo.db.connector');
+
+before(() => {
+    mongoose.disconnect();
+    mongodb.createTestConnection();
+});
+
+beforeEach((done) => {
+	const {games, stores, accessories } = mongoose.connection.collections;
+	games.drop(() => {
+		stores.drop(() => {
+			accessories.drop(() => {
+        done();
+			});
+		});
+	});
+});
