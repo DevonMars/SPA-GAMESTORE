@@ -74,7 +74,7 @@ export class GamesService {
         imagePath: image
       };
     }
-    this.http.put( BACKEND_URL + + id, gameData)
+    this.http.put( BACKEND_URL + id, gameData)
     .subscribe(response => {
       this.router.navigate(['/']);
     });

@@ -29,13 +29,13 @@ before(() => {
     mongodb.createTestConnection();
 });
 
-beforeEach((done) => {
-	const {games, stores, accessories } = mongoose.connection.collections;
-	games.drop(() => {
-		stores.drop(() => {
-			accessories.drop(() => {
-        done();
-			});
-		});
-	});
-});
+// beforeEach((done) => {
+// 	const {games, stores, accessories } = mongoose.connection.collections;
+// 	games.drop(() => {
+// 		stores.drop(() => {
+// 			accessories.drop(() => {
+//         done();
+// 			});
+// 		});
+// 	});
+// });
