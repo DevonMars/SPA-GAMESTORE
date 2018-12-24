@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "start:server": "nodemon ./Backend/server.js",
     "postinstall": "ng build --prod ",
-    "test": "nodemon --exec mocha --recursive --timeout 5000 -R min"
+    "test": "nodemon --exec mocha --recursive --timeout 7000 -R min"
   },
   "private": true,
   "dependencies": {
