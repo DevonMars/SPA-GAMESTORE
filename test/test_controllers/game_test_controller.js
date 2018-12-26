@@ -105,7 +105,7 @@ chai.use(chaiHttp);
 describe('Game Controller', () => {
     var token = null;
   beforeEach((done) => {
-    Game.remove({}, (err) => {
+    Game.deleteMany({}, (err) => {
       done();
     })
     request(app)
@@ -142,6 +142,7 @@ describe('Game Controller', () => {
       .end(function(err, res) {
         if (err) return done(err);
         expect(res.statusCode).to.equal(201);
+        console.log(res.body)
         res.body.should.have.property('message').eql('Game added successfully');
         done();
       });

@@ -105,7 +105,7 @@ chai.use(chaiHttp);
 describe('Accessory Controller', () => {
     var token = null;
   beforeEach((done) => {
-    Accessory.remove({}, (err) => {
+    Accessory.deleteMany({}, (err) => {
       done();
     })
     request(app)
@@ -129,21 +129,23 @@ describe('Accessory Controller', () => {
     });
   });
 
-  // describe('/Post Accessory', () => {
-  //   it('it should post a accessory', (done) => {
-  //     request(app)
-  //     .post('/api/accessories')
-  //     .set('Authorization', 'Bearer ' + token)
-  //     .field('Content-Type', 'multipart/form-data')
-  //     .field({title:'test', discription:'test'})
-  //     //when adding image to test change the path to fit your computer
-  //     .attach('image', 'images/hyperx.jpg')
-  //     .expect(201)
-  //     .end(function(err, res) {
-  //       done();
-  //     });
-  //   });
-  // });
+  describe('/Post Accessory', () => {
+    it('it should post a accessory', (done) => {
+      request(app)
+      .post('/api/accessories')
+      .set('Authorization', 'Bearer ' + token)
+      .field('Content-Type', 'multipart/form-data')
+      .field({title:'test', discription:'test'})
+      //when adding image to test change the path to fit your computer
+      .attach('image', 'images/hyperx.jpg')
+      .expect(201)
+      .end(function(err, res) {
+        console.log(res.body)
+        res.body.should.have.property('message').eql('Accessory added successfully');
+        done();
+      });
+    });
+  });
 
   describe('/Get/:id accessory', () => {
     it('it should Get a accessory by the given id', (done) => {
@@ -178,10 +180,10 @@ describe('Accessory Controller', () => {
         .set('Authorization', 'Bearer ' + token)
         .field('Content-Type', 'multipart/form-data')
         .field({id: access3.id, title:'TestAccess', discription:'test'})
-      //when adding image to test change the path to fit your computer
         .end((err, res) => {
+          console.log(res.body)
           res.should.have.status(200);
-          res.body.should.have.property('message').eql('Update successful!');
+          res.body.should.have.property('message').eql('Update Accessory successful!');
           done();
         })
       });

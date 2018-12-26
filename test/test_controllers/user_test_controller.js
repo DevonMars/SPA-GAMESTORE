@@ -10,14 +10,6 @@ chai.use(chaiHttp);
 
 describe('Post /signup and /login' , function() {
 
-  // beforeEach((done) => {
-
-
-  //   Promise.all([user1.save()])
-  //   .then(() => done());
-
-
-  // })
 
   it('Should register a user', function(done) {
     User.collection.drop(() => {

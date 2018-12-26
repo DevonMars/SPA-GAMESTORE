@@ -33,7 +33,7 @@ exports.UpdateAccessory = (req, res, next) => {
     imagePath: imagePath
   });
   Accessory.findOneAndUpdate({_id: req.params.id}, accessory).then(result => {
-    res.status(200).json({message: 'Update successful!'});
+    res.status(200).json({message: 'Update Accessory successful!'});
   });
 };
 
