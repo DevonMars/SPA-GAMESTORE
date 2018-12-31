@@ -10,7 +10,6 @@ chai.use(chaiHttp);
 
 describe('Post /signup and /login' , function() {
 
-
   it('Should register a user', function(done) {
     User.collection.drop(() => {
       var token = 'Bearer ';
