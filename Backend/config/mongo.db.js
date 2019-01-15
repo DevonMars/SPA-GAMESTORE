@@ -6,12 +6,6 @@ var env = {
   dbDatabase: process.env.DB_DATABASE || 'SPAGamingStoreDB'
 }
 
-
-var dburl = process.env.NODE_ENV === 'production' ?
-    'mongodb://' + env.dbUser + ':' + env.dbPassword + '@' + env.dbHost + ':' + env.dbPort + '/' + env.dbDatabase :
-    'mongodb://localhost/' + env.dbDatabase
-
-
 var dburl_dev = 'mongodb+srv://devAdmin:' + process.env.MONGO_ATLAS_PW + '@cluster0-bxeix.mongodb.net/SPAGamingStoreDB?retryWrites=true';
 
 var dburl_test = 'mongodb+srv://devAdmin:' + process.env.MONGO_ATLAS_PW + '@cluster0-bxeix.mongodb.net/SPAGamingStoreDB_test?retryWrites=true';
