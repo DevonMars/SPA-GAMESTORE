@@ -8,14 +8,16 @@ exports.CreateGame = (req, res, next) => {
     imagePath: url + '/images/' + req.file.filename
   });
   game.save().then(createdGame => {
-    res.status(201).json({
-      message: 'Game added successfully',
-      game: {
-        ...createdGame,
-        id: createdGame._id
-      }
-    });
-  });
+    if(createdGame) {
+      res.status(201).json({
+        message: 'Game added successfully',
+        game: {
+          ...createdGame,
+          id: createdGame._id
+        }
+      });
+    }
+  }).catch((error) => res.status(400).send({error: error.message}));
 };
 
 exports.UpdateGame = (req, res, next) => {
@@ -32,8 +34,14 @@ exports.UpdateGame = (req, res, next) => {
   });
   Game.findOneAndUpdate({_id: req.params.id}, game)
   .then(result => {
-    res.status(200).json({message: 'Update successful!'});
-  });
+    if (result) {
+      res.status(200).json({message: 'Update successful!'});
+    } else {
+      res.status(404).json({
+        message: 'Game not found!'
+      });
+    }
+  }).catch((error) => res.status(400).send({error: error.message}));
 };
 
 exports.GetGames = (req, res, next) => {
@@ -71,8 +79,16 @@ exports.GetGame = (req, res, next) => {
 
 exports.DeleteGame = (req, res, next) => {
   Game.deleteOne({ _id: req.params.id }).then(result => {
-    res.status(200).json({ message: "Game deleted!" });
-  });
+    if (result) {
+      res.status(200).json({
+        message: "Game deleted!"
+      });
+    } else {
+      res.status(404).json({
+        message: "Game not Found"
+      });
+    }
+  }).catch((error) => res.status(400).send({error: error.message}));
 };
 
 

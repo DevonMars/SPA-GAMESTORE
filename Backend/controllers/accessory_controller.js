@@ -13,7 +13,10 @@ exports.CreateAccessory = (req, res, next) => {
     if(createdGame) {
       res.status(201).json({
       message: 'Accessory added successfully',
-      accessory: {...createdGame, id: createdGame._id}
+      accessory: {
+        ...createdGame,
+        id: createdGame._id
+      }
     });
   }}).catch((error) => res.status(400).send({error: error.message}));
 };

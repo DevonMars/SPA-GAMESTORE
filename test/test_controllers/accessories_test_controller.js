@@ -219,8 +219,10 @@ describe('accessory controller', () => {
     });
 
     it('it should NOT update a accessory without a title', async() =>  {
+      const failedaccess = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
+      await failedaccess.save();
       const putFailedTitle = await chai.request(app)
-      .post('/api/accessories')
+      .put('/api/accessories/' + failedaccess.id)
       .set('Authorization', 'Bearer ' + token)
       .field('Content-Type', 'multipart/form-data')
       .field({discription:'test'})
@@ -229,8 +231,10 @@ describe('accessory controller', () => {
     });
 
     it('it should NOT update a accessory without a description', async() => {
+      const failedaccess = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
+      await failedaccess.save();
       const putFailedDis = await chai.request(app)
-      .post('/api/accessories')
+      .put('/api/accessories/' + failedaccess.id)
       .set('Authorization', 'Bearer ' + token)
       .field('Content-Type', 'multipart/form-data')
       .field({title:'test'})
