@@ -104,6 +104,7 @@
 // });
 
 let Accessory = require('../../Backend/models/accessory.model')
+let User = require('../../Backend/models/user.model')
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../../Backend/app');
@@ -114,16 +115,34 @@ chai.use(chaiHttp);
 describe('accessory controller', () => {
   var token = null;
 
-  beforeEach(async () => {
+  before( async () => {
+    const signup = await chai.request(app)
+    .post('/api/user/signup')
+    .send({email: 'devchai@test.com', password: 'welkom'})
+    expect(signup).to.be.a('object');
+    expect(signup.status).to.equal(201);
+
     const login = await chai.request(app)
     .post('/api/user/login')
     .send({email: 'devchai@test.com', password: 'welkom'})
     expect(login).to.be.a('object');
+    expect(login.status).to.equal(200);
     expect(login.body).to.have.property('token');
     token = login.body.token;
   });
+
+  // beforeEach(async () => {
+  //   const login = await chai.request(app)
+  //   .post('/api/user/login')
+  //   .send({email: 'devchai@test.com', password: 'welkom'})
+  //   expect(login).to.be.a('object');
+  //   expect(login.body).to.have.property('token');
+  //   token = login.body.token;
+  // });
+
   afterEach(async () => {
     await Accessory.deleteMany();
+    await User.deleteMany();
   });
 
   describe('#/get Accessory()', () => {
@@ -242,6 +261,18 @@ describe('accessory controller', () => {
       expect(putFailedDis.status).to.equal(400);
     });
 
+    it('it should NOT update a accessory without a image', async() => {
+      const failedaccess = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
+      await failedaccess.save();
+      const putFailedDis = await chai.request(app)
+      .put('/api/accessories/' + failedaccess.id)
+      .set('Authorization', 'Bearer ' + token)
+      .field('Content-Type', 'multipart/form-data')
+      .field({title:'test'})
+      .field({discription:'test'})
+      expect(putFailedDis.status).to.equal(400);
+    });
+
     it('it should UPDATE a accessory with the given id', async() => {
       const access = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
       await access.save();
@@ -258,18 +289,19 @@ describe('accessory controller', () => {
   });
 
   describe('/DELETE/:id accessory', () => {
-    // it('it should return status 400 if Accessory id invalid', async() => {
-    //   const failedaccess = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
-    //   const deleteFailedId = await chai.request(app)
-    //   .delete('/api/accessories/' + failedaccess.id)
-    //   .set('Authorization', 'Bearer ' + token)
-    //   .field({id: failedaccess.id})
-    //   expect(deleteFailedId.status).to.equal(400)
-    // });
+    it('it should return status 400 if Accessory id invalid', async() => {
+      const failedaccess = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
+      const deleteFailedId = await chai.request(app)
+      .delete('/api/accessories/' + failedaccess.id)
+      .set('Authorization', 'Bearer ' + token)
+      .field({id: failedaccess.id})
+      expect(deleteFailedId.status).to.equal(404)
+      expect(deleteFailedId.body).to.have.property('message').eql('Accessory not found!')
+    });
 
     it('it should DELETE a accessory with the given id', async() => {
       const access = new Accessory({ title: "TestAccess", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});
-      access.save();
+      await access.save();
       const deleteOne = await chai.request(app)
       .delete('/api/accessories/' + access.id)
       .set('Authorization', 'Bearer ' + token)

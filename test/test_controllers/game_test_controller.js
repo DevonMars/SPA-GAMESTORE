@@ -108,7 +108,8 @@
 //   });
 // });
 
-let Game = require('../../Backend/models/game.model')
+let Game = require('../../Backend/models/game.model');
+let User = require('../../Backend/models/user.model');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let app = require('../../Backend/app');
@@ -119,16 +120,33 @@ chai.use(chaiHttp);
 describe('game controller', () => {
   var token = null;
 
-  beforeEach(async () => {
+  before( async () => {
+    const signup = await chai.request(app)
+    .post('/api/user/signup')
+    .send({email: 'devchai@test.com', password: 'welkom'})
+    expect(signup).to.be.a('object');
+    expect(signup.status).to.equal(201);
+
     const login = await chai.request(app)
     .post('/api/user/login')
     .send({email: 'devchai@test.com', password: 'welkom'})
     expect(login).to.be.a('object');
+    expect(login.status).to.equal(200);
     expect(login.body).to.have.property('token');
     token = login.body.token;
   });
+
+  // beforeEach(async () => {
+  //   const login = await chai.request(app)
+  //   .post('/api/user/login')
+  //   .send({email: 'devchai@test.com', password: 'welkom'})
+  //   expect(login).to.be.a('object');
+  //   expect(login.body).to.have.property('token');
+  //   token = login.body.token;
+  // });
   afterEach(async () => {
     await Game.deleteMany();
+    await User.deleteMany();
   });
 
   describe('/get Games()', () => {
@@ -247,6 +265,18 @@ describe('game controller', () => {
       expect(putFailedDis.status).to.equal(400);
     });
 
+    it('it should NOT update a game without a image', async() => {
+      const failedGame = new Game({ title: "testTitle", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/horizonzero.jpg-1545306332493.jpg'});
+      await failedGame.save();
+      const putFailedDis = await chai.request(app)
+      .put('/api/games/' + failedGame.id)
+      .set('Authorization', 'Bearer ' + token)
+      .field('Content-Type', 'multipart/form-data')
+      .field({title:'test'})
+      .field({discription:'test'})
+      expect(putFailedDis.status).to.equal(400);
+    });
+
     it('it should UPDATE a game with the given id', async() => {
       const gameUpdate = new Game({ title: "testTitle", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/horizonzero.jpg-1545306332493.jpg'});
       await gameUpdate.save();
@@ -263,14 +293,14 @@ describe('game controller', () => {
   });
 
   describe('/DELETE/:id Game', () => {
-    // it('it should return status 404 if game id invalid', async() => {
-    //   const gameDelete = new Game({ title: "testTitle", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/horizonzero.jpg-1545306332493.jpg'});
-    //   const deleteFailedId = await chai.request(app)
-    //   .delete('/api/games/' + gameDelete.id)
-    //   .set('Authorization', 'Bearer ' + token)
-    //   expect(deleteFailedId.status).to.equal(200)
-    //   expect(deleteFailedId.body).to.have.property('message').eql('Game not found!')
-    // });
+    it('it should return status 404 if game id invalid', async() => {
+      let gameDelete = new Game({ title: "testTitle", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/horizonzero.jpg-1545306332493.jpg'});
+      const deleteFailedId = await chai.request(app)
+      .delete('/api/games/' + gameDelete.id)
+      .set('Authorization', 'Bearer ' + token)
+      expect(deleteFailedId.status).to.equal(404)
+      expect(deleteFailedId.body).to.have.property('message').eql('Game not found!')
+    });
 
     it('it should DELETE a game with the given id', async() => {
       const gameDelete = new Game({ title: "testTitle", discription: 'test content', imagePath: 'http://127.0.0.1:56314/images/horizonzero.jpg-1545306332493.jpg'});

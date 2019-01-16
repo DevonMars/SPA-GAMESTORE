@@ -9,11 +9,13 @@ exports.CreateStore = (req, res, next) => {
   });
 
   store.save().then(createdStore => {
-    res.status(201).json({
-      message: 'Store added successfully',
-      storeId: createdStore._id,
-    });
-  });
+    if (createdStore) {
+      res.status(201).json({
+        message: 'Store added successfully',
+        storeId: createdStore._id
+      });
+    }
+  }).catch((error) => res.status(400).send({error: error.message}));
 };
 
 exports.UpdateStore = (req, res, next) => {
@@ -28,8 +30,16 @@ exports.UpdateStore = (req, res, next) => {
   .populate('games')
   .populate('accessories')
   .then(result => {
-    res.status(200).json({message: 'Update successful!'});
-  });
+    if (result) {
+      res.status(200).json({
+        message: 'Update successful!'
+      });
+    } else {
+      res.status(404).json({
+        message: 'store not found!'
+      });
+    }
+  }).catch((error) => res.status(400).send({error: error.message}));
 };
 
 exports.GetStores = (req, res, next) => {
@@ -70,7 +80,15 @@ exports.GetStore = (req, res, next) => {
 };
 
 exports.DeleteStore = (req, res, next) => {
-  Store.deleteOne({ _id: req.params.id }).then(result => {
-    res.status(200).json({ message: "Store deleted!" });
+  Store.findOneAndDelete({ _id: req.params.id }).then(result => {
+    if (!result) {
+      res.status(404).json({
+        message: "Store not found!"
+      });
+    } else {
+      res.status(200).json({
+        message: "Store deleted!"
+      });
+    }
   });
 };

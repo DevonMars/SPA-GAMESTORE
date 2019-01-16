@@ -78,17 +78,17 @@ exports.GetGame = (req, res, next) => {
 };
 
 exports.DeleteGame = (req, res, next) => {
-  Game.deleteOne({ _id: req.params.id }).then(result => {
-    if (result) {
+  Game.findOneAndDelete({ _id: req.params.id }).then(result => {
+    if (!result) {
+      res.status(404).json({
+        message: "Game not found!"
+      });
+    } else {
       res.status(200).json({
         message: "Game deleted!"
       });
-    } else {
-      res.status(404).json({
-        message: "Game not Found"
-      });
     }
-  }).catch((error) => res.status(400).send({error: error.message}));
+  })
 };
 
 

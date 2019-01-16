@@ -82,10 +82,15 @@ exports.GetAcccessory = (req, res, next) => {
 
 
 exports.DeleteAccessory = (req, res, next) => {
-  Accessory.deleteOne({ _id: req.params.id })
-  .then(result => {
-    res.status(200).json({
-      message: "Accessory deleted!"
-    });
-  }).catch((error) => res.status(400).send({error: error.message}));
+  Accessory.findOneAndDelete({ _id: req.params.id }).then(result => {
+    if(!result) {
+      res.status(404).json({
+        message: "Accessory not found!"
+      });
+    } else {
+      res.status(200).json({
+        message: "Accessory deleted!"
+      });
+    }
+  })
 };
