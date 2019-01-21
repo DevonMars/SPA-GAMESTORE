@@ -3,11 +3,16 @@ const Accessory = require("../models/accessory.model");
 
 
 exports.CreateAccessory = (req, res, next) => {
-  const url = req.protocol + '://' + req.get('host');
+  // const url = req.protocol + '://' + req.get('host');
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    const url = req.protocol + '://' + req.get('host');
+    imagePath = url + '/images/' + req.file.filename
+  }
   const accessory = new Accessory({
     title: req.body.title,
     discription: req.body.discription,
-    imagePath: url + '/images/' + req.file.filename
+    imagePath: imagePath
   });
   accessory.save().then(createdGame => {
     if(createdGame) {
@@ -17,7 +22,7 @@ exports.CreateAccessory = (req, res, next) => {
         ...createdGame,
         id: createdGame._id
       }
-    });
+    })
   }}).catch((error) => res.status(400).send({error: error.message}));
 };
 
