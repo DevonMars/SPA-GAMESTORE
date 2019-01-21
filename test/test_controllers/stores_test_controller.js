@@ -224,16 +224,6 @@ describe('store controller', () => {
       expect(postFailedOne.status).to.equal(400);
     });
 
-    // it('it should NOT post a game without a image', async() => {
-    //   const postFailedOne = await chai.request(app)
-    //   .post('/api/games')
-    //   .set('Authorization', 'Bearer ' + token)
-    //   .field('Content-Type', 'multipart/form-data')
-    //   .field({title:'test'})
-    //   .field({discription:'test'})
-    //   expect(postFailedOne.status).to.equal(500);
-    // });
-
     it('it should post a store', async() => {
       const dummyGame = new Game({title: 'testgame', discription: 'sdsdaa', imagePath: 'http://127.0.0.1:56314/images/horizonzero.jpg-1545306332493.jpg'});
       const dummyAccessory = new Accessory({title: 'accessdsda', discription: 'gamesdad', imagePath: 'http://127.0.0.1:56314/images/hyperx.jpg-1545306332493.jpg'});

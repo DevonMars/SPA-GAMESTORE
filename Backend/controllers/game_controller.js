@@ -1,11 +1,16 @@
 const Game = require('../models/game.model');
 
 exports.CreateGame = (req, res, next) => {
-  const url = req.protocol + '://' + req.get('host');
+  // const url = req.protocol + '://' + req.get('host');
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    const url = req.protocol + '://' + req.get('host');
+    imagePath = url + '/images/' + req.file.filename
+  }
   const game = new Game({
     title: req.body.title,
     discription: req.body.discription,
-    imagePath: url + '/images/' + req.file.filename
+    imagePath: imagePath
   });
   game.save().then(createdGame => {
     if(createdGame) {
@@ -16,8 +21,7 @@ exports.CreateGame = (req, res, next) => {
           id: createdGame._id
         }
       });
-    }
-  }).catch((error) => res.status(400).send({error: error.message}));
+    }}).catch((error) => res.status(400).send({error: error.message}));
 };
 
 exports.UpdateGame = (req, res, next) => {

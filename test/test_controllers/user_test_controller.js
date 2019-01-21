@@ -21,7 +21,7 @@ describe('user controller', () => {
   });
 
   describe('/Signup', () => {
-    it('Should register a user', async() => {
+    it('Should register a user if creds are valid', async() => {
       const signup = await chai.request(app)
       .post('/api/user/signup')
       .send({email: 'testSignup@test.com', password: 'welkom'})
@@ -31,6 +31,12 @@ describe('user controller', () => {
   })
 
   describe('/Login', () => {
+    it('it return 401 if cred is invalid', async () => {
+      const loginfailed = await chai.request(app)
+      .post('/api/user/login')
+      .send({email: 'devchai@test.com', password: 'welkom1'})
+      expect(loginfailed.status).to.equal(401);
+    });
     it('it return 200 if credentials are correct', async () => {
       const login = await chai.request(app)
       .post('/api/user/login')
@@ -39,6 +45,5 @@ describe('user controller', () => {
       expect(login.status).to.equal(200);
       expect(login.body).to.have.property('token');
     });
-
   });
 })
