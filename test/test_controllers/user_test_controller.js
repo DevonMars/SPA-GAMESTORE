@@ -21,6 +21,15 @@ describe('user controller', () => {
   });
 
   describe('/Signup', () => {
+    it('Should not register a user if email already exist', async() => {
+      const user1 = new User({ email: "testSignup@test.com", password: 'welkom'});
+      await user1.save();
+      const userCreate = await chai.request(app)
+      .post('/api/user/signup')
+      .send({email: "testSignup@test.com", password: 'welkom'})
+      expect(userCreate.status).to.equal(500);
+    });
+    
     it('Should register a user if creds are valid', async() => {
       const signup = await chai.request(app)
       .post('/api/user/signup')
