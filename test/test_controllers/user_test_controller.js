@@ -8,28 +8,28 @@ chai.use(chaiHttp);
 
 describe('user controller', () => {
 
-  beforeEach( async () => {
-    const signup = await chai.request(app)
-    .post('/api/user/signup')
-    .send({email: 'devchai@test.com', password: 'welkom'})
-    expect(signup).to.be.a('object');
-    expect(signup.status).to.equal(201);
-  })
+  // before( async () => {
+  //   const signup = await chai.request(app)
+  //   .post('/api/user/signup')
+  //   .send({email: 'devchai@test.com', password: 'welkom'})
+  //   expect(signup).to.be.a('object');
+  //   expect(signup.status).to.equal(201);
+  // });
 
   afterEach(async () => {
-    await User.deleteMany();
+    await User.deleteOne({"email" : "testSignup@test.com"});
   });
 
   describe('/Signup', () => {
     it('Should not register a user if email already exist', async() => {
       const user1 = new User({ email: "testSignup@test.com", password: 'welkom'});
-      await user1.save();
+      user1.save()
       const userCreate = await chai.request(app)
       .post('/api/user/signup')
       .send({email: "testSignup@test.com", password: 'welkom'})
       expect(userCreate.status).to.equal(500);
     });
-    
+
     it('Should register a user if creds are valid', async() => {
       const signup = await chai.request(app)
       .post('/api/user/signup')
@@ -37,7 +37,7 @@ describe('user controller', () => {
       expect(signup).to.be.a('object');
       expect(signup.status).to.equal(201);
     });
-  })
+  });
 
   describe('/Login', () => {
     it('it return 401 if cred is invalid', async () => {
