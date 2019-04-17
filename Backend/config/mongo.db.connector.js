@@ -15,11 +15,12 @@ function createDevConnection() {
 function createTestConnection() {
     mongoose.connect(config.dburl_test, { useNewUrlParser: true })
     var connection = mongoose.connection
-        .once('open', () => console.log('Connected to Mongo on localhost to test'))
+        .once('open', () => console.log('Connected to Mongo on cloud to test'))
         .on('error', (error) => {
             console.warn('Warning', error.toString());
         });
 }
+
 
 var connection = mongoose.connection
 
